@@ -1,0 +1,496 @@
+<!DOCTYPE html><html lang="zh-Hans"><head>
+	
+	
+	
+<link rel="stylesheet" href="/css/allinone.min.css">
+
+
+	
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	<title>Bert模型与论文理解 | My Blog</title>
+
+	<meta name="HandheldFriendly" content="True">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Zhang">
+	<meta name="description" content>
+
+	
+	<meta name="keywords" content>
+	
+
+	
+	<link rel="shortcut icon" href="https://mubai.oss-cn-hangzhou.aliyuncs.com/icon.png">
+	<link rel="apple-touch-icon" href="https://mubai.oss-cn-hangzhou.aliyuncs.com/icon.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+	<link rel="alternate" href="https://geekmubai.com/feed" title="My Blog">
+	
+
+	<meta property="og:site_name" content="My Blog">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="Bert模型与论文理解 | My Blog">
+	<meta property="og:description" content>
+	<meta property="og:url" content="http://yoursite.com/2020/01/31/Bert%E6%A8%A1%E5%9E%8B%E4%B8%8E%E8%AE%BA%E6%96%87%E7%90%86%E8%A7%A3/">
+
+	
+	<meta property="article:published_time" content="2020-01-31T16:01:00+08:00"> 
+	<meta property="article:author" content="Zhang">
+	<meta property="article:published_first" content="My Blog, /2020/01/31/Bert%E6%A8%A1%E5%9E%8B%E4%B8%8E%E8%AE%BA%E6%96%87%E7%90%86%E8%A7%A3/">
+	
+</head>
+<body class="post-template">
+	<div class="site-wrapper">
+		
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">HOME</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="ABOUT">ABOUT</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="ARCHIVES">ARCHIVES</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    
+    <div class="search-button">
+        <a href="#search" class="subscribe-button" style="margin: 0 10px;">Search ...</a>
+    </div>
+     
+    <div class="site-nav-right">
+        
+        <a href="#search" class="subscribe-button" style="margin: 0 10px;">Search ...</a>
+         
+        
+<div class="social-links">
+    
+    
+    <a class="social-link" title="github" href="https://github.com/gaunny" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z"/></svg>
+    </a>
+    
+    
+    
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time class="post-full-meta-date" datetime="2020-01-31T08:58:45.000Z" itemprop="datePublished">
+                    2020-01-31
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                
+            </section>
+            <h1 class="post-full-title">Bert模型与论文理解</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <p>论文解读与Bert模型学习</p>
+<h4 id="Bert太火了，大创用到的模型就是bert，但是之前自己作为负责人一直在忙其他工作，没有将重心放在模型学习与理解上，恰好寒假，我有时间好好读一下论文，先将整理到的相关资源放在下面："><a href="#Bert太火了，大创用到的模型就是bert，但是之前自己作为负责人一直在忙其他工作，没有将重心放在模型学习与理解上，恰好寒假，我有时间好好读一下论文，先将整理到的相关资源放在下面：" class="headerlink" title="Bert太火了，大创用到的模型就是bert，但是之前自己作为负责人一直在忙其他工作，没有将重心放在模型学习与理解上，恰好寒假，我有时间好好读一下论文，先将整理到的相关资源放在下面："></a>Bert太火了，大创用到的模型就是bert，但是之前自己作为负责人一直在忙其他工作，没有将重心放在模型学习与理解上，恰好寒假，我有时间好好读一下论文，先将整理到的相关资源放在下面：</h4><h3 id="1-Google官方："><a href="#1-Google官方：" class="headerlink" title="1.Google官方："></a>1.Google官方：</h3><p>（1）<a href="https://arxiv.org/abs/1810.04805" target="_blank" rel="noopener">BERT：Pre-training of Deep Bidirectional Transformers for Language Understanding (BERT:语言理解的深度双向变换器预训练)</a></p>
+<p>（2）GitHub:<a href="https://github.com/google-research/bert" target="_blank" rel="noopener">源代码</a></p>
+<p>（3）</p>
+<h3 id="2-大佬笔记"><a href="#2-大佬笔记" class="headerlink" title="2.大佬笔记"></a>2.大佬笔记</h3><p>（1）<a href="https://zhuanlan.zhihu.com/p/49271699" target="_blank" rel="noopener">张俊林</a></p>
+<p>（2）<a href="https://zhuanlan.zhihu.com/p/46652512" target="_blank" rel="noopener">李如</a></p>
+<h2 id="BERT模型："><a href="#BERT模型：" class="headerlink" title="BERT模型："></a>BERT模型：</h2><p>​    BERT的全称是Bidirectional Encoder Representation from Tansformers，即双向Transformer的Encoder，因为decoder是不能获取要预测的信息的，模型的主要创新点都在pre-train方法上，即用了Masked LM和Next Sentence Prediction两种方法分别捕捉词语与句子级别的representation。</p>
+<h3 id="理解模型之前，要知道："><a href="#理解模型之前，要知道：" class="headerlink" title="理解模型之前，要知道："></a>理解模型之前，要知道：</h3><h3 id="1、Attention原理"><a href="#1、Attention原理" class="headerlink" title="1、Attention原理"></a>1、<a href="https://zhuanlan.zhihu.com/p/43493999" target="_blank" rel="noopener">Attention</a>原理</h3><h4 id="（1）核心思想"><a href="#（1）核心思想" class="headerlink" title="（1）核心思想"></a>（1）核心思想</h4><p>​    在decoding阶段对input中的信息赋予不同权重。在NLP中就是针对sequence的每个time step input，在cv中就是针对每个pixel。</p>
+<h4 id="（2）原理解析"><a href="#（2）原理解析" class="headerlink" title="（2）原理解析"></a>（2）原理解析</h4><p>​    比较基础的加入attention与rnn结合的model是：（也叫soft attention)</p>
+<p><img alt="preview" class="post-img b-lazy" href="https://pic4.zhimg.com/v2-5a509cc5d422b5d83006f41738dd7b43_r.jpg" data-src="https://pic4.zhimg.com/v2-5a509cc5d422b5d83006f41738dd7b43_r.jpg"></p>
+<p><img alt="img" class="post-img b-lazy" href="https://pic4.zhimg.com/80/v2-f0a7c907fca9301a628ac3a5bfe04ac7_hd.jpg" data-src="https://pic4.zhimg.com/80/v2-f0a7c907fca9301a628ac3a5bfe04ac7_hd.jpg"></p>
+<p>​    其中 <img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=%5Calpha_%7B0%7D%5E1" data-src="https://www.zhihu.com/equation?tex=%5Calpha_%7B0%7D%5E1"> 是 <img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=h_%7B0%7D%5E1" data-src="https://www.zhihu.com/equation?tex=h_%7B0%7D%5E1"></p>
+<p>对应的权重，算出所有权重后会进行softmax和加权，得到<img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=c%5E0" data-src="https://www.zhihu.com/equation?tex=c%5E0"></p>
+<p>可以看到Encoding和decoding阶段仍然是rnn，但是decoding阶使用attention的输出结果 <img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=c%5E0%2C+c%5E1" data-src="https://www.zhihu.com/equation?tex=c%5E0%2C+c%5E1"> 作为rnn的输入。</p>
+<p><strong>那么重点来了， 权重 <img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=%5Calpha" data-src="https://www.zhihu.com/equation?tex=%5Calpha"> 是怎么来的呢？常见有三种方法：</strong></p>
+<ul>
+<li><img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=%5Calpha_%7B0%7D%5E1%3Dcos%5C_sim%28z_0%2C+h_1%29" data-src="https://www.zhihu.com/equation?tex=%5Calpha_%7B0%7D%5E1%3Dcos%5C_sim%28z_0%2C+h_1%29"></li>
+<li><img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=%5Calpha_0+%3Dneural%5C_network%28z_0%2C+h%29" data-src="https://www.zhihu.com/equation?tex=%5Calpha_0+%3Dneural%5C_network%28z_0%2C+h%29"></li>
+<li><img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=%5Calpha_0+%3D+h%5ETWz_0" data-src="https://www.zhihu.com/equation?tex=%5Calpha_0+%3D+h%5ETWz_0"></li>
+</ul>
+<p>思想就是根据当前解码“状态”判断输入序列的权重分布。</p>
+<p>如果把attention剥离出来去看的话，其实是以下机制：</p>
+<p><img alt="preview" class="post-img b-lazy" href="https://pic3.zhimg.com/v2-99839119705a82a807409d104f63e88a_r.jpg" data-src="https://pic3.zhimg.com/v2-99839119705a82a807409d104f63e88a_r.jpg"></p>
+<p>输入是query(Q), key(K), value(V)，输出是attention value。如果与之前的模型对应起来的话，query就是 <img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=z_0%2C+z_1" data-src="https://www.zhihu.com/equation?tex=z_0%2C+z_1"> ，key就是 <img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=h_1%2C+h_2%2C+h_3%2C+h_4" data-src="https://www.zhihu.com/equation?tex=h_1%2C+h_2%2C+h_3%2C+h_4"> ，value也是<img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=h_1%2C+h_2%2C+h_3%2C+h_4" data-src="https://www.zhihu.com/equation?tex=h_1%2C+h_2%2C+h_3%2C+h_4">。模型通过Q和K的匹配计算出权重，再结合V得到输出：</p>
+<p><img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=Attention%28Q%2C+K%2C+V%29+%3D+softmax%28sim%28Q%2C+K%29%29V+%5C%5C" data-src="https://www.zhihu.com/equation?tex=Attention%28Q%2C+K%2C+V%29+%3D+softmax%28sim%28Q%2C+K%29%29V+%5C%5C"></p>
+<p>再深入理解下去，这种机制其实做的是<strong>寻址（addressing）</strong>，也就是模仿中央处理器与存储交互的方式将存储的内容读出来，可以看一下<a href="https://link.zhihu.com/?target=http%3A//speech.ee.ntu.edu.tw/~tlkagk/courses_MLSD15_2.html">李宏毅老师的课程</a>。</p>
+<h4 id="（3）模型分类"><a href="#（3）模型分类" class="headerlink" title="（3）模型分类"></a>（3）模型分类</h4><h5 id="3-1-Soft-Hard-Attention"><a href="#3-1-Soft-Hard-Attention" class="headerlink" title="3.1 Soft/Hard Attention"></a>3.1 Soft/Hard Attention</h5><p>Soft Attention：传统attention。可被嵌入到模型中去进行训练并传播梯度</p>
+<p>Hard Attention：不计算所有输出，依据概率对encoder的输出采样，在反向传播时需采用<a href="https://zhuanlan.zhihu.com/p/81806149" target="_blank" rel="noopener">蒙特卡洛进行梯度估计(MCGE)</a></p>
+<h5 id="3-2-Global-Local-Attention"><a href="#3-2-Global-Local-Attention" class="headerlink" title="3.2 Global/Local Attention"></a>3.2 Global/Local Attention</h5><p>Global Attention：传统attention，对所有encoder输出进行计算</p>
+<p>Local Attention：介于soft和hard之间，会预测一个位置并选取一个窗口进行计算</p>
+<h5 id="3-3-Self-Attention"><a href="#3-3-Self-Attention" class="headerlink" title="3.3 Self Attention"></a>3.3 Self Attention</h5><p>传统attention是计算Q和K之间的依赖关系，而self attention则分别计算Q和K自身的依赖关系。</p>
+<h4 id="（4）优缺点"><a href="#（4）优缺点" class="headerlink" title="（4）优缺点"></a>（4）优缺点</h4><h5 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h5><p>·在输出序列与输入序列“顺序”不同的情况下表现较好，如翻译、阅读理解</p>
+<p>·相比RNN可以编码更长的序列信息</p>
+<h5 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h5><p>·对序列顺序不敏感</p>
+<p>·通常和RNN结合使用，不能并行化</p>
+<h4 id="（5）TF源码解析"><a href="#（5）TF源码解析" class="headerlink" title="（5）TF源码解析"></a>（5）TF源码解析</h4><p><a href="https://zhuanlan.zhihu.com/p/27769667" target="_blank" rel="noopener">tensorflow源码解读：Attention Seq2Seq模型</a></p>
+<p>tf.nn.seq2seq文件共实现了5个seq2seq函数，重点了解tf.nn.seq2seq.embedding_attention_seq2seq：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># T代表time_steps, 时序长度</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">embedding_attention_seq2seq</span><span class="params">(encoder_inputs,  <span class="comment"># [T, batch_size] </span></span></span></span><br><span class="line"><span class="function"><span class="params">                                decoder_inputs,  <span class="comment"># [T, batch_size]</span></span></span></span><br><span class="line"><span class="function"><span class="params">                                cell,</span></span></span><br><span class="line"><span class="function"><span class="params">                                num_encoder_symbols,</span></span></span><br><span class="line"><span class="function"><span class="params">                                num_decoder_symbols,</span></span></span><br><span class="line"><span class="function"><span class="params">                                embedding_size,</span></span></span><br><span class="line"><span class="function"><span class="params">                                num_heads=<span class="number">1</span>,      <span class="comment"># attention的抽头数量</span></span></span></span><br><span class="line"><span class="function"><span class="params">                                output_projection=None, <span class="comment">#decoder的投影矩阵</span></span></span></span><br><span class="line"><span class="function"><span class="params">                                feed_previous=False,</span></span></span><br><span class="line"><span class="function"><span class="params">                                dtype=None,</span></span></span><br><span class="line"><span class="function"><span class="params">                                scope=None,</span></span></span><br><span class="line"><span class="function"><span class="params">                                initial_state_attention=False)</span>:</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>参数：</p>
+<h3 id="2、Transformer详解"><a href="#2、Transformer详解" class="headerlink" title="2、Transformer详解"></a>2、<a href="https://zhuanlan.zhihu.com/p/44121378" target="_blank" rel="noopener">Transformer详解</a></h3><p>​    自attention机制提出后，加入attention的seq2seq模型在各个任务上都有了提升，所以现在的seq2seq模型指的都是结合rnn和attention的模型。之后google又提出了解决sequence to sequence问题的transformer模型，用全attention的结构代替了lstm，在翻译任务上取得了更好的成绩。下面主要介绍《Attention is all you need》这篇文章。</p>
+<h4 id="1-模型结构"><a href="#1-模型结构" class="headerlink" title="1.模型结构"></a>1.模型结构</h4><p>和大多数seq2seq模型一样，transformer结构也是由encoder和decoder组成，如图：<img alt="preview" class="post-img b-lazy" href="https://pic1.zhimg.com/v2-4b53b731a961ee467928619d14a5fd44_r.jpg" data-src="https://pic1.zhimg.com/v2-4b53b731a961ee467928619d14a5fd44_r.jpg"></p>
+<h5 id="1-1-Encoder-编码"><a href="#1-1-Encoder-编码" class="headerlink" title="1.1 Encoder(编码)"></a>1.1 Encoder(编码)</h5><p>​    Encoder由N=6个 相同的layer组成，layer指的就是上图左侧的单元，最左边有个“Nx”，这里是x6个。每个Layer由两个sub-layer组成，分别是multi-head self-attention mechanism和fully connected feed-forward network。其中每个sub-layer都加了residual connection和normalisation，因此可以将sub-layer的输出表示为：</p>
+<p><img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=sub%5C_layer%5C_output+%3D+LayerNorm%28x%2B%28SubLayer%28x%29%29%29+%5C%5C" data-src="https://www.zhihu.com/equation?tex=sub%5C_layer%5C_output+%3D+LayerNorm%28x%2B%28SubLayer%28x%29%29%29+%5C%5C"></p>
+<p>接下来按顺序解释一下这两个sub-layer：</p>
+<ul>
+<li><strong>Multi-head self-attention</strong></li>
+</ul>
+<p>熟悉attention原理的知道，attention可由以下形式表示：</p>
+<p><img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=attention%5C_output+%3D+Attention%28Q%2C+K%2C+V%29+%5C%5C" data-src="https://www.zhihu.com/equation?tex=attention%5C_output+%3D+Attention%28Q%2C+K%2C+V%29+%5C%5C"></p>
+<p>multi-head attention则是通过h个不同的<strong>线性变换</strong>对Q，K，V进行投影，最后将不同的attention结果拼接起来：</p>
+<p><img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=MultiHead%28Q%2C+K%2C+V%29+%3D+Concat%28head_1%2C+...%2C+head_h%29W%5EO+%5C%5C" data-src="https://www.zhihu.com/equation?tex=MultiHead%28Q%2C+K%2C+V%29+%3D+Concat%28head_1%2C+...%2C+head_h%29W%5EO+%5C%5C"></p>
+<p><img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=head_i+%3D+Attention%28QW_i%5EQ%2C+KW_i%5EK%2C+VW_i%5EV%29+%5C%5C" data-src="https://www.zhihu.com/equation?tex=head_i+%3D+Attention%28QW_i%5EQ%2C+KW_i%5EK%2C+VW_i%5EV%29+%5C%5C"></p>
+<p>self-attention则是取Q，K，V相同。</p>
+<p>另外，文章中attention的计算采用了scaled dot-product，即：</p>
+<p><img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=Attention%28Q%2C+K%2C+V%29+%3D+softmax%28%5Cfrac%7BQK%5ET%7D%7B%5Csqrt%7Bd_k%7D%7D%29V+%5C%5C" data-src="https://www.zhihu.com/equation?tex=Attention%28Q%2C+K%2C+V%29+%3D+softmax%28%5Cfrac%7BQK%5ET%7D%7B%5Csqrt%7Bd_k%7D%7D%29V+%5C%5C"></p>
+<p>作者同样提到了另一种复杂度相似但计算方法additive attention，在 <img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=d_k" data-src="https://www.zhihu.com/equation?tex=d_k"> 很小的时候和dot-product结果相似，<img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=d_k" data-src="https://www.zhihu.com/equation?tex=d_k">大的时候，如果不进行缩放则表现更好，但dot-product的计算速度更快，进行缩放后可减少影响（由于softmax使梯度过小，具体可见论文中的引用。</p>
+<ul>
+<li><strong>Position-wise feed-forward networks</strong></li>
+</ul>
+<p>这层主要是提供<strong>非线性变换</strong>。Attention输出的维度是[bsz<em>seq_len, num_heads</em>head_size]，第二个sub-layer是个全连接层，之所以是position-wise是因为过线性层时每个位置i的变换参数是一样的。</p>
+<h5 id="1-2-Decoder（解码）"><a href="#1-2-Decoder（解码）" class="headerlink" title="1.2 Decoder（解码）"></a>1.2 Decoder（解码）</h5><p>decoder和encoder的结构差不多，但是多了一个attention的sub-layer。</p>
+<p>decoder的输入输出和解码过程：</p>
+<ul>
+<li><p>输出：对应i位置的输出词的概率分布</p>
+</li>
+<li><p>输入：encoder的输出 & 对应i-1位置decoder的输出。所以中间的attention不是self-attention，它的K，V来自encoder，Q来自上一位置decoder的输出</p>
+</li>
+<li><p>解码：<strong>这里要特别注意一下，编码可以并行计算，一次性全部encoding出来，但解码不是一次把所有序列解出来的，而是像rnn一样一个一个解出来的</strong>，因为要用上一个位置的输入当作attention的query</p>
+<p>明确解码过程之后，新加的attention多加了一个mask，因为训练时的output都是ground truth，这样可以确保预测第i个位置时不会接触到未来的信息。</p>
+<p>加了mask的attention原理如图（另附multi-head attention):</p>
+<p><img alt="preview" class="post-img b-lazy" href="https://pic3.zhimg.com/v2-df2ca1b7a60d829245b7b7c37f80a3aa_r.jpg" data-src="https://pic3.zhimg.com/v2-df2ca1b7a60d829245b7b7c37f80a3aa_r.jpg"></p>
+<h5 id="1-3-Positional-Encoding"><a href="#1-3-Positional-Encoding" class="headerlink" title="1.3 Positional Encoding"></a>1.3 Positional Encoding</h5><p> 除了最主要的Encoder和Decoder，还有数据预处理的部分。Transformer抛弃了rnn，而rnn最大的优点就是在时间序列上对数据的抽象，所以文章中作者提出两种Positional Encoding的方法，将encoding后的数据与embedding数据求和，加入了相对位置信息。</p>
+<p>这里作者提到了两种方法：</p>
+<p>1.用不同频率的sine和cosine函数直接计算</p>
+<p>2.学习出一份positional embedding</p>
+<p>经过实验发现两者的结果一样，所以最后选择了第一种方法，公式如下：</p>
+<p><img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=PE_%7B%28pos%2C+2i%29%7D+%3D+sin%28pos%2F10000%5E%7B2i%2Fd_%7Bmodel%7D%7D%29+%5C%5C" data-src="https://www.zhihu.com/equation?tex=PE_%7B%28pos%2C+2i%29%7D+%3D+sin%28pos%2F10000%5E%7B2i%2Fd_%7Bmodel%7D%7D%29+%5C%5C"></p>
+<p><img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=PE_%7B%28pos%2C+2i%2B1%29%7D+%3D+cos%28pos%2F10000%5E%7B2i%2Fd_%7Bmodel%7D%7D%29+%5C%5C" data-src="https://www.zhihu.com/equation?tex=PE_%7B%28pos%2C+2i%2B1%29%7D+%3D+cos%28pos%2F10000%5E%7B2i%2Fd_%7Bmodel%7D%7D%29+%5C%5C"></p>
+<p>作者提到，方法1的好处有两点：</p>
+<p>1.任意位置的 <img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=PE_%7Bpos%2Bk%7D" data-src="https://www.zhihu.com/equation?tex=PE_%7Bpos%2Bk%7D"> 都可以被 <img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=PE_%7Bpos%7D" data-src="https://www.zhihu.com/equation?tex=PE_%7Bpos%7D"> 的线性函数表示，三角函数特性复习下：</p>
+<p><img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=cos%28%5Calpha%2B%5Cbeta%29+%3D+cos%28%5Calpha%29cos%28%5Cbeta%29-sin%28%5Calpha%29sin%28%5Cbeta%29+%5C%5C" data-src="https://www.zhihu.com/equation?tex=cos%28%5Calpha%2B%5Cbeta%29+%3D+cos%28%5Calpha%29cos%28%5Cbeta%29-sin%28%5Calpha%29sin%28%5Cbeta%29+%5C%5C"></p>
+<p><img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=sin%28%5Calpha%2B%5Cbeta%29+%3D+sin%28%5Calpha%29cos%28%5Cbeta%29+%2B+cos%28%5Calpha%29sins%28%5Cbeta%29+%5C%5C" data-src="https://www.zhihu.com/equation?tex=sin%28%5Calpha%2B%5Cbeta%29+%3D+sin%28%5Calpha%29cos%28%5Cbeta%29+%2B+cos%28%5Calpha%29sins%28%5Cbeta%29+%5C%5C"></p>
+<p>2.如果是学习到的positional embedding，（个人认为，没看论文）会像词向量一样受限于词典大小。也就是只能学习到“位置2对应的向量是(1,1,1,2)”这样的表示。所以用三角公式<strong>明显不受序列长度的限制</strong>，也就是可以对 比所遇到序列的更长的序列 进行表示。</p>
+</li>
+</ul>
+<h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><p>作者主要讲了以下三点：</p>
+<p><img alt="preview" class="post-img b-lazy" href="https://pic4.zhimg.com/v2-a36b4e3924ef8864716736f8f1e77233_r.jpg" data-src="https://pic4.zhimg.com/v2-a36b4e3924ef8864716736f8f1e77233_r.jpg"></p>
+<p>1.Total computional complexity per layer（每层计算复杂度）</p>
+<p>2.Amount of computation that can be parallelized,as mesured by the minimum number of sequential operations required 作者用最小的序列化运算来测量可以被并行化的计算。也就是桌对于某个序列<img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=x_1%2C+x_2%2C+...%2C+x_n" data-src="https://www.zhihu.com/equation?tex=x_1%2C+x_2%2C+...%2C+x_n"> ，self-attention可以直接计算 <img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=x_i%2C+x_j" data-src="https://www.zhihu.com/equation?tex=x_i%2C+x_j"> 的点乘结果，而rnn就必须按照顺序从 <img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=x_1" data-src="https://www.zhihu.com/equation?tex=x_1"> 计算到 <img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=x_n" data-src="https://www.zhihu.com/equation?tex=x_n"></p>
+<p>3.Path length between long-range dependencies in the network</p>
+<p>这里Path length指的是要计算一个序列长度为n的信息要经过的路径长度。cnn需要增加卷积层数来扩大视野，rnn需要从1到n逐个进行计算，而self-attention只需要一步矩阵计算就可以。所以也可以看出，self-attention可以比rnn更好地解决长时依赖问题。当然如果计算量太大，比如序列长度n>序列维度d这种情况，也可以用窗口限制self-attention的计算数量</p>
+<p>4.另外，从作者在附录中给出的例子可以看出，self-attention模型更可解释，attention结果的分布表明了该模型学习到了一些语法和语义信息</p>
+<p><img alt="preview" class="post-img b-lazy" href="https://pic3.zhimg.com/v2-d69547987a6510f22171b35c6e3f7e7e_r.jpg" data-src="https://pic3.zhimg.com/v2-d69547987a6510f22171b35c6e3f7e7e_r.jpg"></p>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><p>原文中没有提到，后来在Universal Transformers中提出的，主要有两点：</p>
+<p>1.实践上：有些rnn轻易可以解决的问题transformer没做到，比如复制string，或者推理时碰到的sequence长度比训练时更长（因为碰到了没见过的position embedding)</p>
+<p>2.理论上：transformers非computational universal(<a href="https://www.zhihu.com/question/20115374/answer/288346717" target="_blank" rel="noopener">图灵完备</a>)，认为无法实现while循环</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>Transformer是一个用纯attention搭建的模型，不仅计算速度更快，在翻译任务上也获得了更好的结果。google现在的翻译应该是在此基础上做的，数据量大可能用transformer好一些，小的话还是继续有用rnn-based model。</p>
+<h2 id="BERT模型结构"><a href="#BERT模型结构" class="headerlink" title="BERT模型结构"></a>BERT模型结构</h2><h4 id="模型的构成元素是Transformer，BERT模型的结构如下图最左："><a href="#模型的构成元素是Transformer，BERT模型的结构如下图最左：" class="headerlink" title="模型的构成元素是Transformer，BERT模型的结构如下图最左："></a>模型的构成元素是Transformer，BERT模型的结构如下图最左：</h4><p><img alt="preview" class="post-img b-lazy" href="https://pic1.zhimg.com/v2-d942b566bde7c44704b7d03a1b596c0c_r.jpg" data-src="https://pic1.zhimg.com/v2-d942b566bde7c44704b7d03a1b596c0c_r.jpg"></p>
+<p>对比OpenAI GPT(Generative pre-trained transformer)，BERT是双向的Transformer block连接；就像单向rnn和双向rnn的区别，直觉上来讲效果会好一些。</p>
+<p>对比ELMo，虽然都是“双向”，但目标函数其实是不同的。ELMo是分别以<img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=P%28w_i%7C+w_1%2C+...w_%7Bi-1%7D%29" data-src="https://www.zhihu.com/equation?tex=P%28w_i%7C+w_1%2C+...w_%7Bi-1%7D%29"> 和 <img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=P%28w_i%7Cw_%7Bi%2B1%7D%2C+...w_n%29" data-src="https://www.zhihu.com/equation?tex=P%28w_i%7Cw_%7Bi%2B1%7D%2C+...w_n%29"> 作为目标函数，独立训练处两个representation然后拼接，而BERT则是以 <img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=P%28w_i%7Cw_1%2C++...%2Cw_%7Bi-1%7D%2C+w_%7Bi%2B1%7D%2C...%2Cw_n%29" data-src="https://www.zhihu.com/equation?tex=P%28w_i%7Cw_1%2C++...%2Cw_%7Bi-1%7D%2C+w_%7Bi%2B1%7D%2C...%2Cw_n%29"> 作为目标函数训练LM。</p>
+<h3 id="Embedding"><a href="#Embedding" class="headerlink" title="Embedding"></a>Embedding</h3><h4 id="这里的Embedding由三种Embedding求和而成："><a href="#这里的Embedding由三种Embedding求和而成：" class="headerlink" title="这里的Embedding由三种Embedding求和而成："></a>这里的Embedding由三种<a href="https://blog.csdn.net/qq_35799003/article/details/84780289" target="_blank" rel="noopener">Embedding</a>求和而成：</h4><p><img alt="preview" class="post-img b-lazy" href="https://pic2.zhimg.com/v2-11505b394299037e999d12997e9d1789_r.jpg" data-src="https://pic2.zhimg.com/v2-11505b394299037e999d12997e9d1789_r.jpg"></p>
+<p>其中：</p>
+<p>·Token Embeddings是词向量，第一个单词是CLS标志，可以用于之后的分类任务</p>
+<p>·Segment Embeddings是用来区别两种句子，因为预训练不光做LM还要做以两个句子为输入的分类任务</p>
+<p>·Position Embeddings和之前文章中的Transformer不一样，不是三角函数而是学习出来的</p>
+<h3 id="预训练第一步：Masked-LM"><a href="#预训练第一步：Masked-LM" class="headerlink" title="预训练第一步：Masked LM"></a>预训练第一步：Masked LM</h3><p>​    第一步预训练的目标就是做语言模型，从上文模型机构中看到了这个模型的不同，即bidirectional(双向的)。如果使用预训练模型处理其他任务，那人们想要的肯定不止某个词左边的信息，二十左右两边的信息。而考虑到这点的模型ELMo只是将left-to-right和right-to-left分别训练拼接起来。直觉上来讲我们其实想要一个deeply bidirectional的模型，但是普通的LM又无法做到，因为在训练时可能会“穿越”，所以作者用了一个加mask的技巧。</p>
+<p>​    在训练过程中作者随机mask 15%的token，而不是把像cbow一样把每个词都预测一遍。<strong>最终的损失函数只计算被mask掉那个token。</strong></p>
+<p>​    Mask如何做也是有技巧的，如果一直用标记[MASK]代替（在实际预测时是碰不到这个标记的）会影响模型，所以随机mask的时候10%的单词会被替代成其他单词，10%的单词不替换，剩下80%才被替换为[MASK]。具体为什么这么分配，作者没有说。要注意的是Masked LM预训练阶段模型是不知道真正被mask的是哪个词，所以模型每个词都要关注。</p>
+<p>​    因为序列长度太大（512）会影响训练速度，所以90%的steps都用seq_len=128训练，余下的10%步数训练512长度的输入。</p>
+<h3 id="预训练第二步：Next-Sentence-Prediction"><a href="#预训练第二步：Next-Sentence-Prediction" class="headerlink" title="预训练第二步：Next Sentence Prediction"></a>预训练第二步：Next Sentence Prediction</h3><p>​    因为涉及到QA和NLI之类的任务，增加了第二个预训练任务，目的是让模型理解两个句子之间的联系。训练的输入是句子A和B，B有一半的几率是A的下一句，输入这两个句子，模型预测B是不是A的下一句。预训练的时候可以达到97-98%的准确度。</p>
+<p>​    注意：作者特意说了预料的选取很关键，要选用document-level的而不是sentence-level的，这样可以具备抽象连续长序列特征的能力。</p>
+<h3 id="Fine-tunning-微调"><a href="#Fine-tunning-微调" class="headerlink" title="Fine-tunning(微调)"></a>Fine-tunning(微调)</h3><p>分类：对于sequence-level的分类任务，BERT直接取第一个[CLS]token的final hidden state <img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=C%5Cin%5CRe%5EH" data-src="https://www.zhihu.com/equation?tex=C%5Cin%5CRe%5EH"> ，加一层权重 <img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=W%5Cin%5CRe%5E%7BK%5Ctimes+H%7D" data-src="https://www.zhihu.com/equation?tex=W%5Cin%5CRe%5E%7BK%5Ctimes+H%7D"> 后softmax预测label proba： <img alt="[公式]" class="post-img b-lazy" href="https://www.zhihu.com/equation?tex=P%3Dsoftmax%28CW%5ET%29+%5C%5C" data-src="https://www.zhihu.com/equation?tex=P%3Dsoftmax%28CW%5ET%29+%5C%5C"></p>
+<p>其他预测任务需要进行一些调整，如图：<img alt="preview" class="post-img b-lazy" href="https://pic2.zhimg.com/v2-b054e303cdafa0ce41ad761d5d0314e1_r.jpg" data-src="https://pic2.zhimg.com/v2-b054e303cdafa0ce41ad761d5d0314e1_r.jpg"></p>
+<p>可以调整的参数和取值范围有：</p>
+<ul>
+<li>Batch size: 16, 32</li>
+<li>Learning rate (Adam): 5e-5, 3e-5, 2e-5</li>
+<li>Number of epochs: 3, 4</li>
+</ul>
+<p>因为大部分参数都和预训练时一样，精调会快一些，所以作者推荐多试一些参数。</p>
+<h3 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h3><p>BERT是截至2018年10月的最新state of the art模型，通过预训练和精调横扫了11项NLP任务，这首先就是最大的优点了。而且它还用的是Transformer，也就是相对rnn更加高效、能捕捉更长距离的依赖。对比起之前的预训练模型，它捕捉到的是真正意义上的bidirectional context信息。</p>
+<h3 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h3><p>作者在文中主要提到的就是MLM预训练时的mask问题：</p>
+<ol>
+<li>[MASK]标记在实际预测中不会出现，训练时用过多[MASK]影响模型表现</li>
+<li>每个batch只有15%的token被预测，所以BERT收敛得比left-to-right模型要慢（它们会预测每个token）</li>
+</ol>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>一遍读下来，感觉用到的都是现有的东西，可没想到效果会这么好，而别人又没想到。不过文章中没有具体解释的很多点可以看出这样出色的结果也是通过不断地实验得出的，而且训练的数据也比差不多结构的OpenAI GPT多，所以数据、模型结构，都是不可或缺的东西。</p>
+<p>​    </p>
+
+                </div>
+            </section>
+        </article>
+    </div>
+
+    
+    <div style="height: 4vw;width: 100%"></div>
+    <nav id="gobottom" class="pagination">
+        
+        <span class="prev-next-post">•</span>
+        
+        <a class="next-post" title="leetcode-时间复杂度问题" href="/2020/01/17/leetcode-%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%97%AE%E9%A2%98/">
+            leetcode-时间复杂度问题 →
+        </a>
+        
+    </nav>
+
+    
+    <div class="inner">
+        <div id="comment"></div>
+    </div>
+    
+</main>
+
+<div class="toc-bar">
+    <div class="toc-btn-bar">
+        <a href="#site-main" class="toc-btn">
+            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z"/></svg>
+        </a>
+        <div class="toc-btn toc-switch">
+            <svg class="toc-open" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64"/></svg>
+            <svg class="toc-close hide" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z"/><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z"/></svg>
+        </div>
+        <a href="#gobottom" class="toc-btn">
+            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z"/></svg>
+        </a>
+    </div>
+    <div class="toc-main">
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#Bert太火了，大创用到的模型就是bert，但是之前自己作为负责人一直在忙其他工作，没有将重心放在模型学习与理解上，恰好寒假，我有时间好好读一下论文，先将整理到的相关资源放在下面："><span class="toc-text">Bert太火了，大创用到的模型就是bert，但是之前自己作为负责人一直在忙其他工作，没有将重心放在模型学习与理解上，恰好寒假，我有时间好好读一下论文，先将整理到的相关资源放在下面：</span></a></li></ol><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Google官方："><span class="toc-text">1.Google官方：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-大佬笔记"><span class="toc-text">2.大佬笔记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BERT模型："><span class="toc-text">BERT模型：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#理解模型之前，要知道："><span class="toc-text">理解模型之前，要知道：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1、Attention原理"><span class="toc-text">1、Attention原理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#（1）核心思想"><span class="toc-text">（1）核心思想</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#（2）原理解析"><span class="toc-text">（2）原理解析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#（3）模型分类"><span class="toc-text">（3）模型分类</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-1-Soft-Hard-Attention"><span class="toc-text">3.1 Soft/Hard Attention</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-Global-Local-Attention"><span class="toc-text">3.2 Global/Local Attention</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-3-Self-Attention"><span class="toc-text">3.3 Self Attention</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#（4）优缺点"><span class="toc-text">（4）优缺点</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#优点："><span class="toc-text">优点：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#缺点："><span class="toc-text">缺点：</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#（5）TF源码解析"><span class="toc-text">（5）TF源码解析</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、Transformer详解"><span class="toc-text">2、Transformer详解</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-模型结构"><span class="toc-text">1.模型结构</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-1-Encoder-编码"><span class="toc-text">1.1 Encoder(编码)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-2-Decoder（解码）"><span class="toc-text">1.2 Decoder（解码）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-3-Positional-Encoding"><span class="toc-text">1.3 Positional Encoding</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#优点"><span class="toc-text">优点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#缺点"><span class="toc-text">缺点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BERT模型结构"><span class="toc-text">BERT模型结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#模型的构成元素是Transformer，BERT模型的结构如下图最左："><span class="toc-text">模型的构成元素是Transformer，BERT模型的结构如下图最左：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Embedding"><span class="toc-text">Embedding</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#这里的Embedding由三种Embedding求和而成："><span class="toc-text">这里的Embedding由三种Embedding求和而成：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#预训练第一步：Masked-LM"><span class="toc-text">预训练第一步：Masked LM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#预训练第二步：Next-Sentence-Prediction"><span class="toc-text">预训练第二步：Next Sentence Prediction</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fine-tunning-微调"><span class="toc-text">Fine-tunning(微调)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#优点-1"><span class="toc-text">优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#缺点-1"><span class="toc-text">缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结-1"><span class="toc-text">总结</span></a>
+    </li></div>
+</div>
+
+
+
+	</div>
+	
+
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card" style="background-image: url(https://mubai.oss-cn-hangzhou.aliyuncs.com/background.jpg)">
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">— My Blog —</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2020/01/31/Bert%E6%A8%A1%E5%9E%8B%E4%B8%8E%E8%AE%BA%E6%96%87%E7%90%86%E8%A7%A3/">Bert模型与论文理解</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2020/01/17/leetcode-%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%97%AE%E9%A2%98/">leetcode-时间复杂度问题</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2020/01/15/CS224n%E8%AF%BE%E7%A8%8B%E8%AE%B0%E5%BD%95/">CS224n课程记录</a>
+      </li>
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+            
+            
+            
+
+
+            
+            
+            
+
+            
+        </div>
+    </div>
+</aside>
+
+	
+
+
+
+
+<div id="search" class="search-overlay subscribe-overlay">
+    <div class="search-form">
+        
+        <img class="search-overlay-logo" src="https://mubai.oss-cn-hangzhou.aliyuncs.com/icon.png" alt="My Blog">
+        
+        <input id="local-search-input" class="search-input" type="text" name="search" placeholder="Search ...">
+        <a class="search-overlay-close" href="#"></a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="My Blog">My Blog</a>
+			© 2020
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="http://www.miitbeian.gov.cn/" title="皖ICP备17018037号" target="_blank" rel="noopener">皖ICP备17018037号</a>
+            <a href="https://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://geekmubai.com/" title="GeekMubai" target="_blank" rel="noopener">GeekMubai</a>
+        </nav>
+    </div>
+</footer>
+	
+
+
+<script>
+    if(window.navigator && navigator.serviceWorker) {
+        navigator.serviceWorker.getRegistrations()
+        .then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister();
+            }
+        });
+    }
+</script>
+
+
+
+
+
+
+
+<div class="floating-header">
+	<div class="floating-header-logo">
+        <a href="/" title="My Blog">
+			
+                <img src="https://mubai.oss-cn-hangzhou.aliyuncs.com/icon.png" alt="My Blog icon">
+			
+            <span>My Blog</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">—</span>
+    <div class="floating-header-title">Bert模型与论文理解</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+
+
+
+
+
+
+<script src="/js/mix/post-lazy-local.min.js"></script>
+
+
+<script>;(function() {var bLazy = new Blazy()})();</script>
+
+
+
+
+
+<script src="/js/lightgallery.min.js"></script>
+
+
+<link rel="stylesheet" href="/css/lightgallery.min.css">
+
+<script>
+    lightGallery(document.getElementById('lightgallery'), {
+        selector: '.post-img'
+    });
+</script>
+
+
+
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#comment' ,
+        verify: false,
+        notify: false,
+        appId: 'aBRltWkLKGNezPSGs1TBA0GE-gzGzoHsz',
+        appKey: 'Tg0cJFUAcAbzFVaO5hwaRXsx',
+        placeholder: '你是魔鬼吧，都不留言！',
+        pageSize: 10,
+        avatar: 'mm',
+        visitor: true,
+    });
+</script>
+
+
+
+
+
+
+<script>searchFunc("/")</script>
+
+
+
+
+
+
+
+</body></html>

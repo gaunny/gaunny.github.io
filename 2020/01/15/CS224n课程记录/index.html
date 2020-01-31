@@ -143,6 +143,9 @@
 <p>NLP领域：（1）情绪分析（2）问答系统（3）文本处理</p>
 <p>AI大咖：<a href="https://blog.csdn.net/hacker_long/article/details/89609367" target="_blank" rel="noopener">Yann LeCun</a> </p>
 <h5 id="lecture01"><a href="#lecture01" class="headerlink" title="lecture01"></a>lecture01</h5><p><a href="https://www.bilibili.com/video/av41393758/?spm_id_from=333.788.videocard.0" target="_blank" rel="noopener">视频地址</a></p>
+<p>计算机如何处理词语的意思：过去几个世纪里一直用的是分类词典。计算语言学中常见的方式是WordNet那样的词库。比如NLTK中可以通过WordNet查询熊猫的hypernyms (is-a，上位词)，得到“食肉动物”“动物”之类的上位词。也可以查询“good”的同义词——“just品格好”“ripe熟了”。</p>
+<p>discrete representation的问题：（1）缺少新词（2）主观化（3）需要耗费大量人力去整理（4）无法计算准确的词语相似度</p>
+<p>词语只是词表长度的one-hot(独热)向量，这是一种localist representation</p>
 
                 </div>
             </section>
@@ -218,6 +221,12 @@
       
       
       <li>
+        <a href="/2020/01/31/Bert%E6%A8%A1%E5%9E%8B%E4%B8%8E%E8%AE%BA%E6%96%87%E7%90%86%E8%A7%A3/">Bert模型与论文理解</a>
+      </li>
+      
+      
+      
+      <li>
         <a href="/2020/01/17/leetcode-%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%97%AE%E9%A2%98/">leetcode-时间复杂度问题</a>
       </li>
       
@@ -228,10 +237,6 @@
       </li>
       
       
-      
-      <li>
-        <a href="/2020/01/13/hello-world/">Hello World</a>
-      </li>
       
       
     </ul>
